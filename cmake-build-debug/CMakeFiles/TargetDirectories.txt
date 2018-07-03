@@ -1,0 +1,3 @@
+/home/francesco/Desktop/elaborato_assembly/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/francesco/Desktop/elaborato_assembly/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/francesco/Desktop/elaborato_assembly/cmake-build-debug/CMakeFiles/elaborato_assembly.dir

@@ -16,9 +16,9 @@ enum { LOUT_LEN = 8 };
 
 long long current_timestamp() {
     struct timespec tp;
-	clock_gettime(CLOCK_REALTIME, &tp);
-	/* te.tv_nsec nanoseconds divide by 1000 to get microseconds*/
-	long long nanoseconds = tp.tv_sec*1000LL + tp.tv_nsec; // caculate nanoseconds
+    clock_gettime(CLOCK_REALTIME, &tp);
+    /* te.tv_nsec nanoseconds divide by 1000 to get microseconds*/
+    long long nanoseconds = tp.tv_sec*1000LL + tp.tv_nsec; // caculate nanoseconds
     return nanoseconds;
 }
 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 
     toc_c = current_timestamp();
 
-  	long long c_time_in_nanos = toc_c - tic_c;
+    long long c_time_in_nanos = toc_c - tic_c;
 
     /* FINE ELABORAZIONE C */
 
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 
     toc_asm = current_timestamp();
 
-  	long long asm_time_in_nanos = toc_asm - tic_asm;
+    long long asm_time_in_nanos = toc_asm - tic_asm;
 
     /* FINE ELABORAZIONE ASM */
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     printf("ASM time elapsed: %lld ns\n", asm_time_in_nanos);
 
     /* Salvataggio dei risultati ASM */
-  	FILE *outputFile;
+    FILE *outputFile;
     outputFile = fopen (argv[2], "w");
     fprintf (outputFile, "%s", bufferout_asm);
     fclose (outputFile);
