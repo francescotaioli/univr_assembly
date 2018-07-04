@@ -88,6 +88,15 @@ int main(int argc, char *argv[]) {
     Inserite qui il vostro blocco di codice assembly inline o richiamo a funzioni assembly.
     Il blocco di codice prende come input 'bufferin' e deve restituire una variabile stringa 'bufferout_asm' che verrà poi salvata su file. */
 
+    ////////////////////////////// INIZIO ESECUZIONE ASM
+
+
+
+
+
+
+    /////////////////////////////// FINE ESEUZIONE ASM
+
     toc_asm = current_timestamp();
 
     long long asm_time_in_nanos = toc_asm - tic_asm;

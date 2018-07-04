@@ -84,7 +84,7 @@
 		<Unit filename="/home/francesco/Desktop/elaborato_assembly/prova_OUT">
 			<Option target="elaborato_assembly"/>
 		</Unit>
-		<Unit filename="/home/francesco/Desktop/elaborato_assembly/testin.txt">
+		<Unit filename="/home/francesco/Desktop/elaborato_assembly/test_in.txt">
 			<Option target="elaborato_assembly"/>
 		</Unit>
 		<Unit filename="/home/francesco/Desktop/elaborato_assembly/CMakeLists.txt">
