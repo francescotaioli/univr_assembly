@@ -3,4 +3,4 @@ project(elaborato_assembly C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(elaborato_assembly controllore.c test_in.txt prova_OUT)
+add_executable(elaborato_assembly controllore.c)
