@@ -7,7 +7,7 @@
 #include <sys/time.h>
 
 /* Inserite eventuali extern modules qui */
-
+//extern int pot_asm(int b, int e);
 /* ************************************* */
 
 enum { MAXLINES = 400 };
@@ -90,19 +90,14 @@ int main(int argc, char *argv[]) {
 
     ////////////////////////////// INIZIO ESECUZIONE ASM
     printf("%s", bufferin);
-    int val1= 9, val2=5;
-    __asm__(""
-            "movl %0, %%eax;"
-            " movl %1, %%ebx;"
-            "xchgl %%eax, %%ebx;"
-    : "=r" (val1), "=r" (val2)
-    : "r" (val1), "r" (val2)
-    : "%eax", "%ebx"
-    );
 
-    
-    printf("%i %i", val1, val2);
-
+    //prova
+//    int base, esp, potenza;
+//    base = 2;
+//    esp =4;
+//    potenza=2;
+//    potenza=pot_asm(base,esp);
+//    printf ("Valore della potenza = %d\n",potenza);
 
 
     /////////////////////////////// FINE ESEUZIONE ASM
