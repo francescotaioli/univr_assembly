@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
     : "r" (val1), "r" (val2)
     : "%eax", "%ebx"
     );
+
     printf("%i %i", val1, val2);
 
 
