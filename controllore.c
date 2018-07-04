@@ -90,8 +90,14 @@ int main(int argc, char *argv[]) {
 
     ////////////////////////////// INIZIO ESECUZIONE ASM
     printf("%s", bufferin);
-
-
+    int val1= 9, val2=5;
+    __asm__("movl %0, %%eax; movl %1, %%ebx;"
+            "xchgl %%eax, %%ebx;"
+    : "=r" (val1), "=r" (val2)
+    : "r" (val1), "r" (val2)
+    : "%eax", "%ebx"
+    );
+    printf("%i %i", val1, val2);
 
 
 
