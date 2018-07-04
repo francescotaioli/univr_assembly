@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
-make
+rm -f *.o
 gcc -c -o controllore.o controllore.c
-gcc -o ESEGUIBILE elaborazione.o controllore.o
+gcc -c -m32 -o elaborazione.o elaborazione.s
+gcc -c -m32  -o ESEGUIBILE controllore.o elaborazione.o
 ESEGUIBILE
