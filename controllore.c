@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     printf("ASM time elapsed: %lld ns\n", asm_time_in_nanos);
 
     ///////INIZIO DA CANCELLARE
-    printf("%i\n", stampa(2));
+    printf("%i\n", stampa(18));
     ///////FINE DA CANCELLARE
 
     /* Salvataggio dei risultati ASM */

@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
 rm -f *.o
-gcc -m32 -o EXE elaborazione.s controllore.c
-./EXE testin.txt prova_OUT
+gcc -m32 -g -o exe elaborazione.s controllore.c
+./exe testin.txt prova_OUT
