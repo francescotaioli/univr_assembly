@@ -7,7 +7,7 @@
 #include <sys/time.h>
 
 /* Inserite eventuali extern modules qui */
-extern int check01();
+extern int stampa();
 /* ************************************* */
 
 enum { MAXLINES = 400 };
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     printf("ASM time elapsed: %lld ns\n", asm_time_in_nanos);
 
     ///////INIZIO DA CANCELLARE
-    printf("%i\n", check01());
+    printf("%i\n", stampa(2));
     ///////FINE DA CANCELLARE
 
     /* Salvataggio dei risultati ASM */
