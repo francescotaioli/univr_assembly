@@ -2,7 +2,7 @@
 .section .data
 
 riga:
-    .ascii "0\n"
+    .ascii "0"
 riga_len:
     .long . - riga
 
@@ -17,5 +17,7 @@ asm_main:
     movl 4(%esp), %ecx 					#mette la stringa in ecx
     movl riga_len, %edx 				#metto la lunghezza in edx
 
-    int  $0x80 #interupt print
+    int  $0x80 #interrupt print
+	movl  %ebp, %esp
+	popl  %ebp
     ret
