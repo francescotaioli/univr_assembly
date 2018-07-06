@@ -15,15 +15,15 @@ riga_len:
 asm_main:
 
     pushl %ebp
-	movl %esp, %ebp
-	movl 8(%ebp), %esi
-    movl $4, %eax      				#syscall print
-    movl $1, %ebx      				#scelgo il terminale
-    movl 8(%ebp), %ecx      		#mette la stringa in ecx
+ 	movl %esp, %ebp
 
-    movl riga_len, %edx     		#metto la lunghezza in edx
+    movl $4, %eax          			#syscall print
+    movl $1, %ebx          			#scelgo il terminale
+    movl 8(%ebp), %ecx       		#mette la stringa in ecx
 
-    int $0x80 						#interrupt print
-	movl %ebp, %esp
- 	popl %ebp
+    movl riga_len, %edx       		#metto la lunghezza in edx
+
+    int $0x80       				#interrupt print
+ 	movl %ebp, %esp
+  popl %ebp
  ret
