@@ -1,25 +1,22 @@
+
 .section .data
 
-strApri:
-	.ascii "COMANDO TENDE: APRI\n"
-strApriLen:
-	.long . - strApri
+riga:
+    .ascii "000-1011001000\n"
+riga_len:
+    .long . - riga
 .section .text
 .global asm_main
 .type asm_main, @function
 
-/* riceve il valore in eax */
 asm_main:
-	if0:
-	 	movl 4(%esp), %ecx
-		cmp  $5, %ecx
-		leal strApri, %ecx
-		movl strApriLen, %edx
-		jmp  stampa_stringa
-	
-	stampa_stringa:
-		movl $4, %eax
-		movl $1, %ebx
-		int  $0x80
-	stampa_end:
-ret
+
+    movl $4, %eax
+    movl $1, %ebx
+    #mette mega stringona in ecx
+    movl 4(%esp), %ecx
+    #stampa la mega stringona per la lunghezza di riga
+    movl riga_len, %edx
+
+    int  $0x80
+    ret
