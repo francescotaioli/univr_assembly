@@ -7,7 +7,7 @@
 #include <sys/time.h>
 
 /* Inserite eventuali extern modules qui */
-extern int asm_main(int a);
+extern int asm_main(char inizio);
 /* ************************************* */
 
 enum { MAXLINES = 400 };
@@ -90,6 +90,12 @@ int main(int argc, char *argv[]) {
 
     ////////////////////////////// INIZIO ESECUZIONE ASM
     printf("%s", bufferin);
+    printf("\n\n \t INIZIO ASM");
+    
+    printf("%i\n", asm_main(bufferin));
+    
+
+    printf("\n\n \t FINE ASM\N");
     
 
     /////////////////////////////// FINE ESEUZIONE ASM
@@ -104,9 +110,6 @@ int main(int argc, char *argv[]) {
     printf("C time elapsed: %lld ns\n", c_time_in_nanos);
     printf("ASM time elapsed: %lld ns\n", asm_time_in_nanos);
 
-    ///////INIZIO DA CANCELLARE
-    printf("%i\n", asm_main(5));
-    ///////FINE DA CANCELLARE
 
     /* Salvataggio dei risultati ASM */
     FILE *outputFile;
