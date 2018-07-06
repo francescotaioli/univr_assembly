@@ -92,10 +92,10 @@ int main(int argc, char *argv[]) {
     printf("%s", bufferin);
     printf("\nINIZIO ASM");
     
-    printf("\n\n%i", asm_main(bufferin));
+    printf("\n\n");
     
-
-    printf("\n\nFINE ASM\n");
+    printf("%i\n", asm_main(bufferin));
+    printf("\n\nFINE ASM\n\n");
     
 
     /////////////////////////////// FINE ESEUZIONE ASM
