@@ -21,7 +21,7 @@ asm_main:
     movl $1, %ebx          			#scelgo il terminale
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
 
-    addl $1, %ecx
+    addl $1, %ecx                   #scorro di 1 lettera quello che ho letto
 
     movl riga_len, %edx     		#metto la lunghezza in edx
 
