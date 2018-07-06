@@ -2,9 +2,10 @@
 .section .data
 
 riga:
-    .ascii "000-1011001000\n"
+    .ascii "0\n"
 riga_len:
     .long . - riga
+
 .section .text
 .global asm_main
 .type asm_main, @function
@@ -12,9 +13,9 @@ riga_len:
 asm_main:
 
     movl $4, %eax						#syscall print
-    movl $1, %ebx						#scelgo il temrminale
+    movl $1, %ebx						#scelgo il terminale
     movl 4(%esp), %ecx 					#mette la stringa in ecx
-    movl riga_len, %edx 				#metto la linghezza in edx
+    movl riga_len, %edx 				#metto la lunghezza in edx
 
     int  $0x80 #interupt print
     ret
