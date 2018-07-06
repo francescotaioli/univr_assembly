@@ -21,6 +21,8 @@ asm_main:
     movl $1, %ebx      				#scelgo il terminale
     movl 8(%ebp), %ecx      		#mette la stringa in ecx
 
+    addl $1, %ecx
+
     movl riga_len, %edx     		#metto la lunghezza in edx
 
     int $0x80 						#interrupt print
