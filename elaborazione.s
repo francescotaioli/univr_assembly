@@ -42,7 +42,8 @@ strErroreInputLen:
 /* riceve il valore in eax */
 stampa:
 	if0:
-		cmp  $0, %eax
+	 	movl 4(%esp), %ecx
+		cmp  $5, %ecx
 		jne  if1
 		leal strApri, %ecx
 		movl strApriLen, %edx
