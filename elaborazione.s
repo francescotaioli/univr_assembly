@@ -17,8 +17,8 @@ asm_main:
     pushl %ebp
  	movl %esp, %ebp
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
-	check:     
-		cmpb  $55, (%ecx)				#$55 è il 7
+	check:
+		cmpb  $0x00, (%ecx)				#$55 è il 7
 		jne increment
 		jmp fine_main
 		            				
@@ -31,6 +31,9 @@ asm_main:
 		jmp check
 
 	fine_main:
+		#mov %ecx, %eax
+        
 		movl %ebp, %esp
 		popl %ebp
+		#leave
 		ret
