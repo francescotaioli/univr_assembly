@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     Il blocco di codice prende come input 'bufferin' e deve restituire una variabile stringa 'bufferout_asm' che verrà poi salvata su file. */
 
     ////////////////////////////// INIZIO ESECUZIONE ASM
-    printf("%s", bufferin);
+   
     printf("\nINIZIO ASM");
     
     printf("\n\n");
