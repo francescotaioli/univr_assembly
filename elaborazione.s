@@ -17,15 +17,29 @@ asm_main:
     pushl %ebp
  	movl %esp, %ebp
 
-    movl $4, %eax          			#syscall print
-    movl $1, %ebx          			#scelgo il terminale
+   
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
 
-    addl $1, %ecx                   #scorro di 1 lettera quello che ho letto
+    
 
-    movl riga_len, %edx     		#metto la lunghezza in edx
+  
+ 	
+	check:     
+		cmpb  $55, %ecx
+		je fine_main
+		                 #scorro di 1 lettera quello che ho letto
+		
+		movl $4, %eax          			#syscall print
+		movl $1, %ebx
+		movl riga_len, %edx     		#metto la lunghezza in edx
+		int $0x80 
+		  					
+		jmp increment    				
+	increment:
+		addl $1, %ecx 
+		jmp check
 
-    int $0x80       				#interrupt print
- 	movl %ebp, %esp
-  popl %ebp
- ret
+	fine_main:
+		movl %ebp, %esp
+		popl %ebp
+		ret
