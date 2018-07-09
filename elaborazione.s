@@ -1,6 +1,5 @@
 .section .data
 
-
 riga:
    .ascii "0"
 riga_len:
@@ -18,17 +17,29 @@ asm_main:
  	movl %esp, %ebp
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
 	check:
-		cmpb  $0x00, (%ecx)				#$55 è il 7
-		jne increment
-		jmp fine_main
+		cmpb  $0x00, (%ecx)				#$55 è il 7 #check se la lettera analizzata è '\0' ($0x00)
+		jne increment                   #se non + uguale salta all'incremento
+		jmp fine_main                   #salta a fine main
 		            				
 	increment:
 		movl $4, %eax          			
 		movl $1, %ebx
 		movl riga_len, %edx     		
-		int $0x80 
-		addl $1, %ecx 
+		int $0x80
+
+		cmpb $0x0A, (%ecx)               #confronta lettera analizzata con '\n
+		je random_per_ora               #se trovo '\n' salta a 'random_per_ora'
+
+    fine_increment:                     #punto di aggancio per tornare indietro e continuare
+		addl $1, %ecx                   #a scorrere la stringa
 		jmp check
+
+    random_per_ora:                     #al momento questa funzione stampa un altra volta
+        movl $4, %eax                   #quello che c'è in ecx, quindi il caporiga
+        movl $1, %ebx
+        movl riga_len, %edx
+        int $0x80
+        jmp fine_increment              #salta a fine ciclo principale per incrementare ecx e continuare a scorrere
 
 	fine_main:
 		#mov %ecx, %eax
