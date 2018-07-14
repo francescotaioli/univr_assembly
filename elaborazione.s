@@ -17,8 +17,8 @@ asm_main:
  	movl %esp, %ebp
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
 	check:
-		cmpb  $0x00, (%ecx)				#$55 è il 7 #check se la lettera analizzata è '\0' ($0x00)
-		jne increment                   #se non + uguale salta all'incremento
+		cmpb  $0x00, (%ecx)				#check se la lettera analizzata è '\0' ($0x00)
+		jne increment                   #se non è uguale salta all'incremento
 		jmp fine_main                   #salta a fine main
 		            				
 	increment:
