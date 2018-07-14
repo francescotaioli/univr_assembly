@@ -72,6 +72,30 @@ asm_main:
 
 	fine_controllo_aspirapolvere:
 		inc %ecx
+		jmp controllo_phon
+	
+	fine_controllo_phon:
+		inc %ecx
+		jmp controllo_lavastoviglie
+
+	fine_controllo_lavastoviglie:
+		inc %eax
+		jmp controllo_lavatrice
+
+	fine_controllo_lavatrice:
+		inc %ecx
+		jmp controllo_lamp460w
+	fine_controllo_lamp460w:
+		inc %ecx
+		jmp controllo_4lamp100w
+	fine_controllo_4lamp100w:
+		inc %ecx
+		jmp controllo_hifi
+	fine_controllo_hifi:
+		inc %ecx
+		jmp controllo_tv
+	fine_controllo_tv:
+		inc %ecx
 		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
@@ -155,7 +179,7 @@ asm_main:
 	# se il bit del aspirapolvere è a 1, aggiungo i watt del forno al current_ol
 	controllo_aspirapolvere:
 		cmpb $0x031, (%ecx)
-		jne fine_controllo_frigo
+		jne fine_controllo_aspirapolvere
 		
 		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
@@ -167,8 +191,85 @@ asm_main:
 		movl %edx, (%eax) 				# update di current_ol
 		jmp fine_controllo_aspirapolvere
 
-	controllo_X_bit:
-	    jmp fine_controllo_X_bit
+	# se il bit del phon è a 1, aggiungo i watt del forno al current_ol
+	controllo_phon:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_phon
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal phon, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 				# update di current_ol
+
+		jmp fine_controllo_phon
+
+	controllo_lavastoviglie:
+		jmp fine_controllo_lavastoviglie
+	controllo_lavatrice:
+		jmp fine_controllo_lavatrice
+
+	controllo_lamp460w:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_lamp460w
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal lamp460w, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 				# update di current_ol
+
+		jmp fine_controllo_lamp460w
+
+	controllo_4lamp100w:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_4lamp100w
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal lamp4100w, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 
+		jmp fine_controllo_4lamp100w
+
+
+	controllo_hifi:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_hifi
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal hifi, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 
+		
+		jmp fine_controllo_hifi
+	controllo_tv:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_tv
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal tv, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 
+
+		jmp fine_controllo_tv
 
 	fine_main:
 		#mov %ecx, %eax
