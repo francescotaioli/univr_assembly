@@ -1,4 +1,5 @@
 .section .data
+is_OL_4: .int 4
 
 riga:
    .ascii "0"
@@ -18,7 +19,7 @@ asm_main:
     movl 8(%ebp), %ecx       		#mette la stringa in ecx
 	check:
 		cmpb  $0x00, (%ecx)				#check se la lettera analizzata è '\0' ($0x00)
-		jne increment                   #se non è uguale salta all'incremento
+		jne increment                   #se non  uguale salta all'incremento
 		jmp fine_main                   #salta a fine main
 		            				
 	increment:
