@@ -1,12 +1,10 @@
 .section .data
 # rappresentano i cicli di overload, vanno settate a runtime
-is_OL_4: .int 0 				# mi dice se devo contare la lavastoviglie
-is_OL_5: .int 0 				# mi dice se devo spegnere la lavatrice
-is_OL_6: .int 0 				# devo staccare tutto
 current_OL: .int 0 				# valore del OL corrente
 is_ON: .int 0					# indica se il sistema è spento
 total_watt: .int 0				# indica i watt totati per ogni riga
-
+conta_dw: .int 1					# rappresenta res_dw per ogni riga
+conta_wm: .int 1					# rappresenta res_wm per ogni riga
 # rappresentano i watt di ogni elettrodomestico
 loads:
 	.value 2000
@@ -62,6 +60,7 @@ asm_main:
 
 	fine_controllo_X_bit:
 	    inc %ecx
+		# aggiorna tutte le variabili temporane al loro valore origniale ( tranne ol )
 	    #.
 	    #.
 	    #.
@@ -78,9 +77,14 @@ asm_main:
 		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		movl $1, (%eax)					# aggiorno il valore di is_ON
 		jmp fine_controllo_1_bit
-	
+	# controllo res_dw ( 2 bit della stringa)
 	controllo_2_bit:
-	    #cose
+	    # se siamo al 4 ciclo di ol conta_dw va a 0
+		cmp $4, current_OL
+		jne fine_controllo_2_bit
+		# siamo al 4 ciclo, mento conta_dw a 0
+		leal conta_dw, %eax
+		movl $0, (%eax) 
 	    jmp fine_controllo_2_bit
 
 	controllo_X_bit:
