@@ -64,6 +64,10 @@ asm_main:
 
 	fine_controllo_forno:
 		inc %ecx
+		jmp controllo_frigo
+
+	fine_controllo_frigo:
+		inc %ecx
 		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
@@ -129,6 +133,20 @@ asm_main:
 		
 		jmp fine_controllo_forno
 
+	# se il bit del frigo è a 1, aggiungo i watt del forno al current_ol
+	controllo_frigo:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_frigo
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal frigo, %ebx				# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 
+		jmp fine_controllo_frigo
 
 	controllo_X_bit:
 	    jmp fine_controllo_X_bit
