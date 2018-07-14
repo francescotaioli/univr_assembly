@@ -45,9 +45,11 @@ asm_main:
 		movl riga_len, %edx     		
 		int $0x80
 
-		# verifico che il primo bit sia diverso da 0, altrimenti salto una riga
-		#jmp controllo_1_bit
-
+		# se il primo bit è a 0 e is_ON è a zero vado a controllo_1_bit
+		mov is_ON, %al
+		cmp $0, %al
+		jz controllo_1_bit
+	fine_controllo_1_bit:
 		cmpb $0x0A, (%ecx)              # confronta lettera analizzata con '\n
 		je random_per_ora               # se trovo '\n' salta a 'random_per_ora'
 
@@ -64,9 +66,8 @@ asm_main:
 
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
-		mov is_ON, %al
-		cmp $48, (%ecx)					# controllo che il primo bit sia diverso da 0
-
+		#mov 1, (is_ON)
+		jmp fine_controllo_1_bit
 	
 	controllo_2_bit:
 
