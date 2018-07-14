@@ -45,7 +45,7 @@ asm_main:
 		movl riga_len, %edx     		
 		int $0x80
 
-		# se il primo bit è a 0 e is_ON è a zero vado a controllo_1_bit
+		# se is_ON è a zero vado a controllo_1_bit
 		mov is_ON, %al
 		cmp $0, %al
 		jz controllo_1_bit
@@ -66,7 +66,8 @@ asm_main:
 
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
-		#mov 1, (is_ON)
+		leal is_ON, %eax
+		mov $1, %eax
 		jmp fine_controllo_1_bit
 	
 	controllo_2_bit:
