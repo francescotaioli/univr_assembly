@@ -6,17 +6,16 @@ total_watt: .int 0				# indica i watt totati per ogni riga
 conta_dw: .int 1					# rappresenta res_dw per ogni riga
 conta_wm: .int 1					# rappresenta res_wm per ogni riga
 # rappresentano i watt di ogni elettrodomestico
-loads:
-	.value 2000
-	.value 300
-	.value 1200
-	.value 1000
-	.value 2000
-	.value 1800
-	.value 240
-	.value 400
-	.value 200
-	.value 400
+forno:	.int 2000
+frigo:	.int 300
+aspirapolvere:	.int 1200
+phon:	.int 1000
+lavastoviglie:	.int 2000
+lavatrice:	.int 1800
+lamp460w:	.int 240
+lamp4100w:	.int 400
+hifi:	.int 200
+tv:	.int 400
 
 riga:
    .ascii "0"
@@ -56,7 +55,16 @@ asm_main:
 
 	fine_controllo_2_bit:
 	    inc %ecx
-	    jmp controllo_X_bit
+	    jmp controllo_3_bit
+
+	fine_controllo_3_bit:
+		inc %ecx
+		inc %ecx
+		jmp controllo_forno
+
+	fine_controllo_forno:
+		inc %ecx
+		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
 	    inc %ecx
@@ -77,15 +85,50 @@ asm_main:
 		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		movl $1, (%eax)					# aggiorno il valore di is_ON
 		jmp fine_controllo_1_bit
+
 	# controllo res_dw ( 2 bit della stringa)
 	controllo_2_bit:
 	    # se siamo al 4 ciclo di ol conta_dw va a 0
-		cmp $4, current_OL
-		jne fine_controllo_2_bit
+		
+		# cmp $4, current_OL
+		# jne fine_controllo_2_bit
 		# siamo al 4 ciclo, mento conta_dw a 0
-		leal conta_dw, %eax
-		movl $0, (%eax) 
-	    jmp fine_controllo_2_bit
+		# leal conta_dw, %eax
+		# movl $0, (%eax) 
+	    
+		# se res_dw è a 1, metto conta_dw a 1
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_2_bit
+	    leal conta_dw, %eax
+		movl $1, (%eax) 
+		
+		jmp fine_controllo_2_bit
+	
+	# controllo res_wm ( 3 bit della stringa)
+	controllo_3_bit:
+		# se res_wm è a 1, metto conta_wm a 1
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_3_bit
+		leal  conta_wm, %eax
+		movl $1, (%eax)
+
+		jmp fine_controllo_3_bit
+	# se il bit del forno è a 1, aggiungo i watt del forno al current_ol
+	controllo_forno:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_forno
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal forno, %ebx				# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 
+		
+		jmp fine_controllo_forno
+
 
 	controllo_X_bit:
 	    jmp fine_controllo_X_bit
