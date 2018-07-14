@@ -51,20 +51,22 @@ asm_main:
 		mov is_ON, %al
 		cmp $0, %al
 		jz controllo_1_bit
+
 	fine_controllo_1_bit:
-		cmpb $0x0A, (%ecx)              # confronta lettera analizzata con '\n
-		je random_per_ora               # se trovo '\n' salta a 'random_per_ora'
+		inc %ecx
+	    jmp controllo_2_bit
 
-    fine_increment:                     # punto di aggancio per tornare indietro e continuare
-		addl $1, %ecx                   # a scorrere la stringa
-		jmp check
+	fine_controllo_2_bit:
+	    inc %ecx
+	    jmp controllo_X_bit
 
-    random_per_ora:                     # al momento questa funzione stampa un altra volta
-        movl $4, %eax                   # quello che c'è in ecx, quindi il caporiga
-        movl $1, %ebx
-        movl riga_len, %edx
-        int $0x80
-        jmp fine_increment              # salta a fine ciclo principale per incrementare ecx e continuare a scorrere
+	fine_controllo_X_bit:
+	    inc %ecx
+	    #.
+	    #.
+	    #.
+        jmp fine_main
+
 
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
@@ -76,10 +78,14 @@ asm_main:
 		jmp fine_controllo_1_bit
 	
 	controllo_2_bit:
+	    #cose
+	    jmp fine_controllo_2_bit
+
+	controllo_X_bit:
+	    jmp fine_controllo_X_bit
 
 	fine_main:
 		#mov %ecx, %eax
-        
 		movl %ebp, %esp
 		popl %ebp
 		#leave
