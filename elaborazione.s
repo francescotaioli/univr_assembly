@@ -40,7 +40,7 @@ asm_main:
 		cmpb  $0x00, (%ecx)				# check se la lettera analizzata è '\0' ($0x00)
 		jne increment                   # se non  uguale salta all'incremento
 		jmp fine_main                   # salta a fine main
-	#scorre una riga in input	            				
+	# scorre una riga in input	            				
 	increment:
 		movl $4, %eax          			
 		movl $1, %ebx
@@ -73,7 +73,7 @@ asm_main:
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
 		# se il primo bit è a 1 metto is_on a 1
-		cmpb $0x030, (%ecx)					# compare fra ecx e 1
+		cmpb $0x031, (%ecx)					# compare fra ecx e 1
 		jne fine_controllo_1_bit
 		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		movl $1, (%eax)					# aggiorno il valore di is_ON
