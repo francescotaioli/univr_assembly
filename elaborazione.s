@@ -68,6 +68,10 @@ asm_main:
 
 	fine_controllo_frigo:
 		inc %ecx
+		jmp controllo_aspirapolvere
+
+	fine_controllo_aspirapolvere:
+		inc %ecx
 		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
@@ -129,7 +133,7 @@ asm_main:
 		
 		addl %eax, %edx					# contiene la somma
 		leal current_OL, %eax
-		movl %edx, (%eax) 
+		movl %edx, (%eax) 				# update di current_ol
 		
 		jmp fine_controllo_forno
 
@@ -146,7 +150,22 @@ asm_main:
 		addl %eax, %edx					# contiene la somma
 		leal current_OL, %eax
 		movl %edx, (%eax) 
-		jmp fine_controllo_frigo
+		jmp fine_controllo_frigo		# update di current_ol
+
+	# se il bit del aspirapolvere è a 1, aggiungo i watt del forno al current_ol
+	controllo_aspirapolvere:
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_frigo
+		
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal aspirapolvere, %ebx				# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 				# update di current_ol
+		jmp fine_controllo_aspirapolvere
 
 	controllo_X_bit:
 	    jmp fine_controllo_X_bit
