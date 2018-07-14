@@ -67,7 +67,7 @@ asm_main:
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
 		leal is_ON, %eax
-		mov $1, %eax
+		movl $1, (%eax)
 		jmp fine_controllo_1_bit
 	
 	controllo_2_bit:
