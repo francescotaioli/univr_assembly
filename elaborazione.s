@@ -79,21 +79,25 @@ asm_main:
 		jmp controllo_lavastoviglie
 
 	fine_controllo_lavastoviglie:
-		inc %eax
+		inc %ecx
 		jmp controllo_lavatrice
 
 	fine_controllo_lavatrice:
 		inc %ecx
 		jmp controllo_lamp460w
+
 	fine_controllo_lamp460w:
 		inc %ecx
 		jmp controllo_4lamp100w
+
 	fine_controllo_4lamp100w:
 		inc %ecx
 		jmp controllo_hifi
+
 	fine_controllo_hifi:
 		inc %ecx
 		jmp controllo_tv
+
 	fine_controllo_tv:
 		inc %ecx
 		jmp fine_controllo_X_bit
@@ -256,6 +260,8 @@ asm_main:
 		movl %edx, (%eax) 
 		
 		jmp fine_controllo_hifi
+
+		
 	controllo_tv:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_tv
