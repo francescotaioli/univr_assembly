@@ -1,5 +1,22 @@
 .section .data
-is_OL_4: .int 4
+#rappresentano i cicli di overload, vanno settate a runtime
+is_OL_4: .int 0 # mi dice se devo contare la lavastoviglie
+is_OL_5: .int 0 # mi dice se devo spegnere la lavatrice
+is_OL_6: .int 0 # devo staccare tutto
+current_OL: .int 0 # valore del OL corrente
+
+#rappresentano i watt di ogni elettrodomestico
+loads:
+	.value 2000
+	.value 300
+	.value 1200
+	.value 1000
+	.value 2000
+	.value 1800
+	.value 240
+	.value 400
+	.value 200
+	.value 400
 
 riga:
    .ascii "0"
@@ -21,7 +38,7 @@ asm_main:
 		cmpb  $0x00, (%ecx)				#check se la lettera analizzata è '\0' ($0x00)
 		jne increment                   #se non  uguale salta all'incremento
 		jmp fine_main                   #salta a fine main
-		            				
+	#scorre una riga in input	            				
 	increment:
 		movl $4, %eax          			
 		movl $1, %ebx
