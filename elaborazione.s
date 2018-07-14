@@ -65,6 +65,8 @@ asm_main:
 	    #.
 	    #.
 	    #.
+	    #qui avrò controllato tutti e 13 i bit, faccio un compare con \n se è uguale salto a fine programma
+	    #se è diverso vuol dire che ho un altra riga e salto a inizio del ciclio di incremento e studio la nuova riga
         jmp fine_main
 
 
