@@ -5,6 +5,8 @@ is_OL_5: .int 0 				# mi dice se devo spegnere la lavatrice
 is_OL_6: .int 0 				# devo staccare tutto
 current_OL: .int 0 				# valore del OL corrente
 is_ON: .int 0					# indica se il sistema è spento
+total_watt: .int 0				# indica i watt totati per ogni riga
+
 # rappresentano i watt di ogni elettrodomestico
 loads:
 	.value 2000
@@ -66,8 +68,11 @@ asm_main:
 
 	controllo_1_bit:
 		# todo: mettere una riga a 0 nella stringa
-		leal is_ON, %eax
-		movl $1, (%eax)
+		# se il primo bit è a 1 metto is_on a 1
+		cmpb $0x030, (%ecx)					# compare fra ecx e 1
+		jne fine_controllo_1_bit
+		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
+		movl $1, (%eax)					# aggiorno il valore di is_ON
 		jmp fine_controllo_1_bit
 	
 	controllo_2_bit:
