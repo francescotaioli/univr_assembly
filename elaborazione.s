@@ -344,6 +344,7 @@ asm_main:
 
 		# altrimenti sono in fascia 1
 		movl $1, %eax						# delete
+		addl  %edx, %eax					# delete
 		jmp fine_controllo_fascia
 	controllo_F2:
 		# 1.5kW < F2 <= 3kW
@@ -367,6 +368,7 @@ asm_main:
 		
 	# sono in OL, devo fare le opportune cose
 	OL:
+		# todo : fare i tramacci
 		jmp fine_controllo_fascia
 	fine_main:
 		#mov %ecx, %eax
