@@ -1,9 +1,9 @@
 .section .data
 .comm	result_array,100,32
 # rappresentano i cicli di overload, vanno settate a runtime
-current_OL: .int 0 				# valore del OL corrente
+total_watt: .int 0 				# valore del OL corrente
 is_ON: .int 0					# indica se il sistema è spento
-total_watt: .int 0				# indica i watt totati per ogni riga
+c:.int 0				# indica i watt totati per ogni riga
 conta_dw: .int 1					# rappresenta res_dw per ogni riga
 conta_wm: .int 1					# rappresenta res_wm per ogni riga
 # rappresentano i watt di ogni elettrodomestico
@@ -133,7 +133,7 @@ asm_main:
 	controllo_2_bit:
 	    # se siamo al 4 ciclo di ol conta_dw va a 0
 		
-		# cmp $4, current_OL
+		# cmp $4, total_watt
 		# jne fine_controllo_2_bit
 		# siamo al 4 ciclo, mento conta_dw a 0
 		# leal conta_dw, %eax
@@ -156,65 +156,65 @@ asm_main:
 		movl $1, (%eax)
 
 		jmp fine_controllo_3_bit
-	# se il bit del forno è a 1, aggiungo i watt del forno al current_ol
+	# se il bit del forno è a 1, aggiungo i watt del forno al total_watt
 	controllo_forno:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_forno
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal forno, %ebx				# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 		
 		jmp fine_controllo_forno
 
-	# se il bit del frigo è a 1, aggiungo i watt del forno al current_ol
+	# se il bit del frigo è a 1, aggiungo i watt del forno al total_watt
 	controllo_frigo:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_frigo
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal frigo, %ebx				# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
+		leal total_watt, %eax
 		movl %edx, (%eax) 
-		jmp fine_controllo_frigo		# update di current_ol
+		jmp fine_controllo_frigo		# update di total_watt
 
-	# se il bit del aspirapolvere è a 1, aggiungo i watt del forno al current_ol
+	# se il bit del aspirapolvere è a 1, aggiungo i watt del forno al total_watt
 	controllo_aspirapolvere:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_aspirapolvere
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal aspirapolvere, %ebx				# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 		jmp fine_controllo_aspirapolvere
 
-	# se il bit del phon è a 1, aggiungo i watt del forno al current_ol
+	# se il bit del phon è a 1, aggiungo i watt del forno al total_watt
 	controllo_phon:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_phon
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal phon, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 
 		jmp fine_controllo_phon
 
@@ -228,14 +228,14 @@ asm_main:
 		jne fine_controllo_lavastoviglie
 
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal lavastoviglie, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 
 		jmp fine_controllo_lavastoviglie
 
@@ -249,14 +249,14 @@ asm_main:
 		jne fine_controllo_lavatrice
 
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal lavatrice, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 
 
 		jmp fine_controllo_lavatrice
@@ -265,14 +265,14 @@ asm_main:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_lamp460w
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal lamp460w, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
-		movl %edx, (%eax) 				# update di current_ol
+		leal total_watt, %eax
+		movl %edx, (%eax) 				# update di total_watt
 
 		jmp fine_controllo_lamp460w
 
@@ -280,13 +280,13 @@ asm_main:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_4lamp100w
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal lamp4100w, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
+		leal total_watt, %eax
 		movl %edx, (%eax) 
 		jmp fine_controllo_4lamp100w
 
@@ -295,13 +295,13 @@ asm_main:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_hifi
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal hifi, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
+		leal total_watt, %eax
 		movl %edx, (%eax) 
 		
 		jmp fine_controllo_hifi
@@ -311,18 +311,18 @@ asm_main:
 		cmpb $0x031, (%ecx)
 		jne fine_controllo_tv
 		
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
 		leal tv, %ebx					# carico l'indirizzo di memoria di forno in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
-		leal current_OL, %eax
+		leal total_watt, %eax
 		movl %edx, (%eax) 
 
 		jmp fine_controllo_tv
 
-	# qui si controlla current_ol
+	# qui si controlla total_watt
 	# nel caso la macchina fosse in ol, si setta is_ON a 0
 	controllo_fascia:
 		# F1 <= 1.5kW
@@ -331,14 +331,14 @@ asm_main:
 		# OL > 4.5kW
 		
 		# DEBUG
-		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx
 		# DEBUG
 		jmp controllo_F1
 		jmp fine_controllo_fascia
 	controllo_F1:
 		# F1 <= 1.5kW
-		movl current_OL, %eax
+		movl total_watt, %eax
 		cmpl $1500,%eax
 		jg controllo_F2
 
@@ -348,7 +348,7 @@ asm_main:
 		jmp fine_controllo_fascia
 	controllo_F2:
 		# 1.5kW < F2 <= 3kW
-		movl current_OL, %eax
+		movl total_watt, %eax
 		cmp $3000, %eax
 		jg controllo_F3
 
@@ -358,7 +358,7 @@ asm_main:
 	
 	controllo_F3:
 		# 3kW < F3 <= 4.5kW
-		movl current_OL, %eax
+		movl total_watt, %eax
 		cmp $4500,%eax
 		jg OL
 
