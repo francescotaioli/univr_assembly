@@ -7,7 +7,7 @@
 #include <sys/time.h>
 
 /* Inserite eventuali extern modules qui */
-extern char * asm_main(char inizio[]);
+extern char * asm_main(char in[], char out[]);
 /* ************************************* */
 
 enum { MAXLINES = 400 };
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
     printf("\n\tINIZIO ASM\n");
     //strcpy(bufferout_asm,asm_main(bufferin));
 
-    asm_main(bufferin);
+    asm_main(bufferin, bufferout_asm);
     //printf("%c\n", asm_main(bufferin));
     printf("\tFINE ASM\n");
     
