@@ -110,9 +110,9 @@ asm_main:
 		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
-	    inc %ecx
+	    #inc %ecx
 		# aggiorna tutte le variabili temporane al loro valore origniale ( tranne ol )
-        cmpb $0x0A, (%ecx)                  # controlla se a fine riga c'è 1n
+        cmpb $0x0A, (%ecx)                  # controlla se a fine riga c'è \n
         je reset_var_e_restart
         #cmpb $0x00, (%ecx)                  # controlla se a fine riga c'è \0
         jmp fine_main
@@ -347,8 +347,7 @@ asm_main:
 		jg controllo_F2
 
 		# altrimenti sono in fascia 1
-		movl $1, %eax						# delete
-		addl  %edx, %eax					# delete
+		
 		jmp fine_controllo_fascia
 	controllo_F2:
 		# 1.5kW < F2 <= 3kW
@@ -357,7 +356,7 @@ asm_main:
 		jg controllo_F3
 
 		# altrimenti sono in f2
-		movl $1, %eax						# delete
+		
 		jmp fine_controllo_fascia
 	
 	controllo_F3:
@@ -367,15 +366,15 @@ asm_main:
 		jg OL
 
 		# altrimenti sono in f3
-		movl $1, %eax						# delete
+		
 		jmp fine_controllo_fascia
 		
 	# sono in OL, devo 
 	# incrementare current_OL
 	OL:
 		# todo : fare i tramacci
-		movl current_OL, %eax
-		inc %eax
+		leal current_OL, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
+		addl $1, (%eax)
 		movl (%eax), %edx
 		jmp fine_controllo_fascia
 	fine_main:
@@ -385,4 +384,3 @@ asm_main:
 		popl %ebp
 		#leave
 		ret
-		
