@@ -1,4 +1,5 @@
 .section .data
+.comm	result_array,100,32
 # rappresentano i cicli di overload, vanno settate a runtime
 current_OL: .int 0 				# valore del OL corrente
 is_ON: .int 0					# indica se il sistema è spento
@@ -110,6 +111,9 @@ asm_main:
 	    #.
 	    #qui avrò controllato tutti e 13 i bit, faccio un compare con \n se è uguale salto a fine programma
 	    #se è diverso vuol dire che ho un altra riga e salto a inizio del ciclio di incremento e studio la nuova riga
+		
+
+
         jmp fine_main
 
 
@@ -212,8 +216,46 @@ asm_main:
 		jmp fine_controllo_phon
 
 	controllo_lavastoviglie:
+		mov conta_dw, %al
+		cmp $1, %al
+		jne fine_controllo_lavastoviglie
+
+		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_lavastoviglie
+
+		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal lavastoviglie, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 				# update di current_ol
+
 		jmp fine_controllo_lavastoviglie
+
 	controllo_lavatrice:
+		mov conta_wm, %al
+		cmp $1, %al
+		jne fine_controllo_lavatrice
+
+		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
+		cmpb $0x031, (%ecx)
+		jne fine_controllo_lavatrice
+
+		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx				# ebx ha il valore di current ol
+		leal lavatrice, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		movl (%ebx), %eax				# eax ha il valore 2000 = forno
+		
+		addl %eax, %edx					# contiene la somma
+		leal current_OL, %eax
+		movl %edx, (%eax) 				# update di current_ol
+
+
 		jmp fine_controllo_lavatrice
 
 	controllo_lamp460w:
