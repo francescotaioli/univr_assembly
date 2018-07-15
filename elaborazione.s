@@ -230,6 +230,12 @@ asm_main:
 		jmp fine_controllo_phon
 
 	controllo_lavastoviglie:
+
+		# se la macchina è spenta int dw è a 0
+		mov is_ON, %al
+        cmp $0, %al
+        je controllo_se_scrivere_0_lavastoviglie
+
 		mov conta_dw, %al
 		cmp $1, %al
 		jne controllo_se_scrivere_0_lavastoviglie
@@ -253,6 +259,12 @@ asm_main:
 		jmp fine_controllo_lavastoviglie
 
 	controllo_lavatrice:
+
+	    # se la macchina è spenta int wm è a 0
+	    mov is_ON, %al
+        cmp $0, %al
+        je controllo_se_scrivere_0_lavatrice
+
 		mov conta_wm, %al
 		cmp $1, %al
 		jne controllo_se_scrivere_0_lavatrice
