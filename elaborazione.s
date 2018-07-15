@@ -120,7 +120,7 @@ asm_main:
     reset_var_e_restart:
         movl $0, total_watt
         inc %ecx
-        jmp increment
+        jmp increment                        # salta a inizio ciclo
 
 
 	controllo_1_bit:
