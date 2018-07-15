@@ -101,6 +101,9 @@ asm_main:
 
 	fine_controllo_tv:
 		inc %ecx
+		jmp controllo_fascia
+	
+	fine_controllo_fascia:
 		jmp fine_controllo_X_bit
 
 	fine_controllo_X_bit:
@@ -319,6 +322,52 @@ asm_main:
 
 		jmp fine_controllo_tv
 
+	# qui si controlla current_ol
+	# nel caso la macchina fosse in ol, si setta is_ON a 0
+	controllo_fascia:
+		# F1 <= 1.5kW
+		# 1.5kW < F2 <= 3kW
+		# 3kW < F3 <= 4.5kW
+		# OL > 4.5kW
+		
+		# DEBUG
+		leal current_OL, %eax			# carico l'indirizzo di memoria di current_ol in eax
+		movl (%eax),%edx
+		# DEBUG
+		jmp controllo_F1
+		jmp fine_controllo_fascia
+	controllo_F1:
+		# F1 <= 1.5kW
+		movl current_OL, %eax
+		cmpl $1500,%eax
+		jg controllo_F2
+
+		# altrimenti sono in fascia 1
+		movl $1, %eax						# delete
+		jmp fine_controllo_fascia
+	controllo_F2:
+		# 1.5kW < F2 <= 3kW
+		movl current_OL, %eax
+		cmp $3000, %eax
+		jg controllo_F3
+
+		# altrimenti sono in f2
+		movl $1, %eax						# delete
+		jmp fine_controllo_fascia
+	
+	controllo_F3:
+		# 3kW < F3 <= 4.5kW
+		movl current_OL, %eax
+		cmp $4500,%eax
+		jg OL
+
+		# altrimenti sono in f3
+		movl $1, %eax						# delete
+		jmp fine_controllo_fascia
+		
+	# sono in OL, devo fare le opportune cose
+	OL:
+		jmp fine_controllo_fascia
 	fine_main:
 		#mov %ecx, %eax
 		movl %ebp, %esp
