@@ -377,15 +377,9 @@ asm_main:
 	# incrementare current_OL
 	OL:
 		# todo : fare i tramacci
-<<<<<<< HEAD
 		leal current_OL, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		addl $1, (%eax)
 		movl (%eax), %edx
-=======
-		movl current_OL, %eax
-		inc %eax
-		#movl (%eax), %edx
->>>>>>> master
 		jmp fine_controllo_fascia
 	fine_main:
 	    # gestione parametro output
