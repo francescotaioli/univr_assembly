@@ -1,11 +1,13 @@
 .section .data
 .comm	result_array,100,32
 # rappresentano i cicli di overload, vanno settate a runtime
-total_watt: .int 0 				# valore del OL corrente
-is_ON: .int 0					# indica se il sistema è spento
-c:.int 0				# indica i watt totati per ogni riga
+total_watt: .int 0 					# indica i watt totati per ogni riga
+is_ON: .int 0						# indica se il sistema è spento
+current_OL:	.int 0					# valore del OL corrente
 conta_dw: .int 1					# rappresenta res_dw per ogni riga
 conta_wm: .int 1					# rappresenta res_wm per ogni riga
+
+
 # rappresentano i watt di ogni elettrodomestico
 forno:	.int 2000
 frigo:	.int 300
@@ -366,9 +368,13 @@ asm_main:
 		movl $1, %eax						# delete
 		jmp fine_controllo_fascia
 		
-	# sono in OL, devo fare le opportune cose
+	# sono in OL, devo 
+	# incrementare current_OL
 	OL:
 		# todo : fare i tramacci
+		movl current_OL, %eax
+		inc %eax
+		movl (%eax), %edx
 		jmp fine_controllo_fascia
 	fine_main:
 		#mov %ecx, %eax
