@@ -118,6 +118,10 @@ asm_main:
 	    #se è diverso vuol dire che ho un altra riga e salto a inizio del ciclio di incremento e studio la nuova riga
 		
 
+    reset_var_e_restart:
+        movl $0, total_watt
+        inc %ecx
+        jmp increment                        # salta a inizio ciclo
 
         jmp fine_main
 
