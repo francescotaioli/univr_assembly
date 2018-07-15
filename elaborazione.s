@@ -48,10 +48,10 @@ asm_main:
 		mov is_ON, %al
 		cmp $0, %al
 		jz controllo_1_bit
-		movb $49, (%edi);
+		movb $49, (%edi)
 		jmp fine_controllo_1_bit
 	controllo_se_scrivere_0:
-	    movb $48, (%edi);
+	    movb $48, (%edi)
 
 	fine_controllo_1_bit:
 		inc %ecx
@@ -82,10 +82,14 @@ asm_main:
 		inc %ecx
 		jmp controllo_lavastoviglie
 
+    controllo_se_scrivere_0_lavastoviglie:
+        movb $48, 1(%edi)
 	fine_controllo_lavastoviglie:
 		inc %ecx
 		jmp controllo_lavatrice
 
+    controllo_se_scrivere_0_lavatrice:
+        movb $48, 2(%edi)
 	fine_controllo_lavatrice:
 		inc %ecx
 		jmp controllo_lamp460w
@@ -118,6 +122,9 @@ asm_main:
         jmp fine_main
 
     reset_var_e_restart:
+        # scrivo nel file di out il caporiga e incremento per continuare a scrivere
+        movb $10, 6(%edi)
+        addl $7, %edi
         movl $0, total_watt
         inc %ecx
         jmp increment                        # salta a inizio ciclo
@@ -225,12 +232,13 @@ asm_main:
 	controllo_lavastoviglie:
 		mov conta_dw, %al
 		cmp $1, %al
-		jne fine_controllo_lavastoviglie
+		jne controllo_se_scrivere_0_lavastoviglie
 
 		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
 		cmpb $0x031, (%ecx)
-		jne fine_controllo_lavastoviglie
+		jne controllo_se_scrivere_0_lavastoviglie
 
+        movb $49, 1(%edi)
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
@@ -241,21 +249,19 @@ asm_main:
 		leal total_watt, %eax
 		movl %edx, (%eax) 				# update di total_watt
 
-		# controllo se sia conta wm sia il load di wm sono a 1, se è così scrive su file 1
-		# altrimenti scrive 0
-
 
 		jmp fine_controllo_lavastoviglie
 
 	controllo_lavatrice:
 		mov conta_wm, %al
 		cmp $1, %al
-		jne fine_controllo_lavatrice
+		jne controllo_se_scrivere_0_lavatrice
 
 		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
 		cmpb $0x031, (%ecx)
-		jne fine_controllo_lavatrice
+		jne controllo_se_scrivere_0_lavatrice
 
+        movb $49, 2(%edi)
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
@@ -333,11 +339,19 @@ asm_main:
 	# qui si controlla total_watt
 	# nel caso la macchina fosse in ol, si setta is_ON a 0
 	controllo_fascia:
+	    #stampo nel file di out in modo costante il trattino che c'è sempre
+	    movb $45, 3(%edi)
+
 		# F1 <= 1.5kW
 		# 1.5kW < F2 <= 3kW
 		# 3kW < F3 <= 4.5kW
 		# OL > 4.5kW
-		
+
+		#controllo se la macch è acc, se è spenta scrivo 00 nella fascia
+		mov is_ON, %al
+        cmp $0, %al
+        je scrive_00
+
 		# DEBUG
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx
@@ -351,7 +365,9 @@ asm_main:
 		jg controllo_F2
 
 		# altrimenti sono in fascia 1
-		
+		movl $0, current_OL             # metto a 0 il ciclo di ol
+        movb $70, 4(%edi)               # scrivo "F1"
+        movb $49, 5(%edi)
 		jmp fine_controllo_fascia
 	controllo_F2:
 		# 1.5kW < F2 <= 3kW
@@ -360,7 +376,9 @@ asm_main:
 		jg controllo_F3
 
 		# altrimenti sono in f2
-		
+		movl $0, current_OL             # metto a 0 il ciclo di ol
+		movb $70, 4(%edi)               # scrivo "F2"
+        movb $50, 5(%edi)
 		jmp fine_controllo_fascia
 	
 	controllo_F3:
@@ -370,7 +388,9 @@ asm_main:
 		jg OL
 
 		# altrimenti sono in f3
-		
+		movl $0, current_OL             # metto a 0 il ciclo di ol
+		movb $70, 4(%edi)               # scrivo "F3"
+        movb $51, 5(%edi)
 		jmp fine_controllo_fascia
 		
 	# sono in OL, devo 
@@ -380,10 +400,19 @@ asm_main:
 		leal current_OL, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		addl $1, (%eax)
 		movl (%eax), %edx
+		movb $79, 4(%edi)                   # scrivo "OL"
+        movb $76, 5(%edi)
 		jmp fine_controllo_fascia
+
+	scrive_00:
+	    movb $48, 4(%edi)
+        movb $48, 5(%edi)
+        jmp fine_controllo_fascia
+
 	fine_main:
 	    # gestione parametro output
 		#mov %ecx, %eax
+		movb $0, 7(%edi)
 		movl %ebp, %esp
 		popl %ebp
 		#leave
