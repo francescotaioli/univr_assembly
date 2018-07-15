@@ -112,7 +112,7 @@ asm_main:
 	fine_controllo_X_bit:
 	    inc %ecx
 		# aggiorna tutte le variabili temporane al loro valore origniale ( tranne ol )
-        cmpb $0x0A, (%ecx)                  # controlla se a fine riga c'è 1n
+        cmpb $0x0A, (%ecx)                  # controlla se a fine riga c'è \n
         je reset_var_e_restart
         #cmpb $0x00, (%ecx)                  # controlla se a fine riga c'è \0
         jmp fine_main
@@ -130,7 +130,7 @@ asm_main:
 		movb $45, (%edi);
 		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		movl $1, (%eax)					# aggiorno il valore di is_ON
-		movb $45, (%edi)                #
+		movb $49, (%edi)                 #
 		jmp fine_controllo_1_bit
 
 	# controllo res_dw ( 2 bit della stringa)
@@ -234,12 +234,16 @@ asm_main:
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
-		leal lavastoviglie, %ebx					# carico l'indirizzo di memoria di forno in ebx
+		leal lavastoviglie, %ebx		# carico l'indirizzo di memoria di lavastoviglie in ebx
 		movl (%ebx), %eax				# eax ha il valore 2000 = forno
 		
 		addl %eax, %edx					# contiene la somma
 		leal total_watt, %eax
 		movl %edx, (%eax) 				# update di total_watt
+
+		# controllo se sia conta wm sia il load di wm sono a 1, se è così scrive su file 1
+		# altrimenti scrive 0
+
 
 		jmp fine_controllo_lavastoviglie
 
@@ -376,7 +380,7 @@ asm_main:
 		# todo : fare i tramacci
 		movl current_OL, %eax
 		inc %eax
-		movl (%eax), %edx
+		#movl (%eax), %edx
 		jmp fine_controllo_fascia
 	fine_main:
 	    # gestione parametro output
