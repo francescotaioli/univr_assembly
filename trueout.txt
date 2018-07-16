@@ -16,3 +16,7 @@
 000-00
 000-00
 111-F2
+
+
+
+		jmp riconta fascia e scrive dw a 0
