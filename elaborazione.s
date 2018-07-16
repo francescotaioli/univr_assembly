@@ -3,10 +3,11 @@
 # rappresentano i cicli di overload, vanno settate a runtime
 total_watt: .int 0 					# indica i watt totati per ogni riga
 is_ON: .int 0						# indica se il sistema è spento
-current_OL:	.int 0					# valore del OL corrente
+current_OL:	.int 1					# valore del OL corrente
 conta_dw: .int 1					# rappresenta res_dw per ogni riga
 conta_wm: .int 1					# rappresenta res_wm per ogni riga
-
+load_dw: .int 0
+load_wm: .int 0
 
 # rappresentano i watt di ogni elettrodomestico
 forno:	.int 2000
@@ -263,6 +264,10 @@ asm_main:
 
 	controllo_lavastoviglie:
 
+		# setto il valore di load_wm
+		leal load_dw, %eax
+		movl (%ecx), %eax
+
 		# se la macchina è spenta int dw è a 0
 		mov is_ON, %al
         cmp $0, %al
@@ -271,6 +276,7 @@ asm_main:
 		mov conta_dw, %al
 		cmp $1, %al
 		jne fine_controllo_lavastoviglie
+
 
 		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
 		cmpb $0x031, (%ecx)
@@ -290,6 +296,10 @@ asm_main:
 		jmp fine_controllo_lavastoviglie
 
 	controllo_lavatrice:
+
+		# setto il valore di load_wm
+		leal load_wm, %eax
+		movl (%ecx), %eax
 
 		mov conta_wm, %al
 		cmp $1, %al
@@ -402,7 +412,7 @@ asm_main:
 		jg controllo_F2
 
 		# altrimenti sono in fascia 1
-		movl $0, current_OL             # metto a 0 il ciclo di ol
+		movl $1, current_OL             # metto a 0 il ciclo di ol
         movb $70, 4(%edi)               # scrivo "F1"
         movb $49, 5(%edi)
 		jmp fine_controllo_fascia
@@ -413,7 +423,7 @@ asm_main:
 		jg controllo_F3
 
 		# altrimenti sono in f2
-		movl $0, current_OL             # metto a 0 il ciclo di ol
+		movl $1, current_OL             # metto a 0 il ciclo di ol
 		movb $70, 4(%edi)               # scrivo "F2"
         movb $50, 5(%edi)
 		jmp fine_controllo_fascia
@@ -425,7 +435,7 @@ asm_main:
 		jg OL
 
 		# altrimenti sono in f3
-		movl $0, current_OL             # metto a 0 il ciclo di ol
+		movl $1, current_OL             # metto a 0 il ciclo di ol
 		movb $70, 4(%edi)               # scrivo "F3"
         movb $51, 5(%edi)
 		jmp fine_controllo_fascia
@@ -463,6 +473,12 @@ asm_main:
         jmp fine_controllo_fascia
 	
 	conta_dw_a_0:
+		# se load_dw è a 1 e conta_dw a 1, sottraggo il valore dei watt di dw
+		# leal conta_dw, %eax
+		# leal load_dw, %edx
+		# andl %eax, %edx
+		# cmp $1, (%edx)
+
 		movl $0, conta_dw			# setto conta_dw a 0 
 		jmp fine_controllo_fascia
 
