@@ -444,9 +444,7 @@ asm_main:
 	# incrementare current_OL
 	OL:
 		# todo : fare i tramacci
-		leal current_OL, %eax				# prendo l'indirizzo di memoria di current_OL e lo salvo in eax
-		addl $1, (%eax)
-		movl (%eax), %edx
+		
 		movb $79, 4(%edi)                   # scrivo "OL"
         movb $76, 5(%edi)
 
@@ -465,12 +463,12 @@ asm_main:
 		cmp $6,%eax
 		je is_ON_a_0
 
-		jmp fine_controllo_fascia
+		jmp incrementa_OL
 
 	scrive_00:
 	    movb $48, 4(%edi)
         movb $48, 5(%edi)
-        jmp fine_controllo_fascia
+        jmp incrementa_OL
 	
 	conta_dw_a_0:
 		# se load_dw è a 1 e conta_dw a 1, sottraggo il valore dei watt di dw
@@ -480,14 +478,20 @@ asm_main:
 		# cmp $1, (%edx)
 
 		movl $0, conta_dw			# setto conta_dw a 0 
-		jmp fine_controllo_fascia
+		jmp incrementa_OL
 
 	conta_wm_a_0:
 		movl $0, conta_wm			# setto conta_wm a 0 
-		jmp fine_controllo_fascia
+		jmp incrementa_OL
 	
 	is_ON_a_0:
 		movl $0, is_ON			# setto is_ON a 0 
+		jmp incrementa_OL
+
+	incrementa_OL:
+		leal current_OL, %eax				# prendo l'indirizzo di memoria di current_OL e lo salvo in eax
+		addl $1, (%eax)
+		movl (%eax), %edx
 		jmp fine_controllo_fascia
 
 	fine_main:
