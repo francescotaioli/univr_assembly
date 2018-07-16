@@ -50,8 +50,6 @@ asm_main:
 		jz controllo_1_bit
 		movb $49, (%edi)
 		jmp fine_controllo_1_bit
-	controllo_se_scrivere_0:
-	    movb $48, (%edi)
 
 	fine_controllo_1_bit:
 		inc %ecx
@@ -82,14 +80,10 @@ asm_main:
 		inc %ecx
 		jmp controllo_lavastoviglie
 
-    controllo_se_scrivere_0_lavastoviglie:
-        movb $48, 1(%edi)
 	fine_controllo_lavastoviglie:
 		inc %ecx
 		jmp controllo_lavatrice
 
-    controllo_se_scrivere_0_lavatrice:
-        movb $48, 2(%edi)
 	fine_controllo_lavatrice:
 		inc %ecx
 		jmp controllo_lamp460w
@@ -108,7 +102,7 @@ asm_main:
 
 	fine_controllo_tv:
 		inc %ecx
-		jmp controllo_fascia
+		jmp scrittura_primi_3_bit
 	
 	fine_controllo_fascia:
 		jmp fine_controllo_X_bit
@@ -120,6 +114,41 @@ asm_main:
         je reset_var_e_restart
         #cmpb $0x00, (%ecx)                  # controlla se a fine riga c'è \0
         jmp fine_main
+
+    scrittura_primi_3_bit:
+        mov is_ON, %al                          # se is_ON è a 0 metto primo bit a 0 altrimenti a 1
+        cmp $0, %al
+        je primo_bit_0
+        movb $49, (%edi)
+        jmp secondo_bit
+
+    primo_bit_0:
+        movb $48, (%edi)                        # se macchina è spenta metto i primi 3 bit a zero
+        movb $48, 1(%edi)
+        movb $48, 2(%edi)
+        jmp controllo_fascia
+
+    secondo_bit:
+        mov conta_dw, %al                      # se conta_dw è a 0 metto secondo bit a 0 altrimenti a 1
+        cmp $0, %al
+        je secondo_bit_0
+        movb $49, 1(%edi)
+        jmp terzo_bit
+
+    secondo_bit_0:
+        movb $48, 1(%edi)
+
+    terzo_bit:
+        mov conta_dw, %al                      # se conta_wm è a 0 metto terzo bit a 0 altrimenti a 1
+        cmp $0, %al
+        je terzo_bit_0
+        movb $49, 2(%edi)
+        jmp controllo_fascia
+
+    terzo_bit_0:
+        movb $48, 2(%edi)
+
+        jmp controllo_fascia
 
     reset_var_e_restart:
         # scrivo nel file di out il caporiga e incremento per continuare a scrivere
@@ -133,11 +162,14 @@ asm_main:
 	controllo_1_bit:
 		# se il primo bit è a 1 metto is_on a 1
 		cmpb $0x031, (%ecx)					# compare fra ecx e 1
-		jne controllo_se_scrivere_0         # se ecx è zero salta
-		movb $45, (%edi);
+		jne fine_controllo_1_bit         # se ecx è zero salta
 		leal is_ON, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
 		movl $1, (%eax)					# aggiorno il valore di is_ON
 		movb $49, (%edi)                 #
+
+		movl $1, conta_dw               # all'accensione rimette i conta a 1
+        movl $1, conta_wm
+
 		jmp fine_controllo_1_bit
 
 	# controllo res_dw ( 2 bit della stringa)
@@ -234,17 +266,16 @@ asm_main:
 		# se la macchina è spenta int dw è a 0
 		mov is_ON, %al
         cmp $0, %al
-        je controllo_se_scrivere_0_lavastoviglie
+        je fine_controllo_lavastoviglie
 
 		mov conta_dw, %al
 		cmp $1, %al
-		jne controllo_se_scrivere_0_lavastoviglie
+		jne fine_controllo_lavastoviglie
 
 		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
 		cmpb $0x031, (%ecx)
-		jne controllo_se_scrivere_0_lavastoviglie
+		jne fine_controllo_lavastoviglie
 
-        movb $49, 1(%edi)
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
@@ -260,20 +291,14 @@ asm_main:
 
 	controllo_lavatrice:
 
-	    # se la macchina è spenta int wm è a 0
-	    mov is_ON, %al
-        cmp $0, %al
-        je controllo_se_scrivere_0_lavatrice
-
 		mov conta_wm, %al
 		cmp $1, %al
-		jne controllo_se_scrivere_0_lavatrice
+		jne fine_controllo_lavatrice
 
 		# conta_dw è a 1, verifico che il load della lavastoviglie sia a 1
 		cmpb $0x031, (%ecx)
-		jne controllo_se_scrivere_0_lavatrice
+		jne fine_controllo_lavatrice
 
-        movb $49, 2(%edi)
 		# conta è a 1, il load è a 1 => devo contare la lavastoviglie
 		leal total_watt, %eax			# carico l'indirizzo di memoria di total_watt in eax
 		movl (%eax),%edx				# ebx ha il valore di current ol
