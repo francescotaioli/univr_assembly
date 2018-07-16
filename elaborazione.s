@@ -139,7 +139,7 @@ asm_main:
         movb $48, 1(%edi)
 
     terzo_bit:
-        mov conta_dw, %al                      # se conta_wm è a 0 metto terzo bit a 0 altrimenti a 1
+        mov conta_wm, %al                      # se conta_wm è a 0 metto terzo bit a 0 altrimenti a 1
         cmp $0, %al
         je terzo_bit_0
         movb $49, 2(%edi)
