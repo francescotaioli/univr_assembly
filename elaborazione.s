@@ -476,7 +476,7 @@ asm_main:
 		leal load_dw, %edx
 		leal total_watt, %ebx
 		andl %eax, %edx
-		cmp $1, (%edx)
+		cmp $1, %edx
 		subl lavastoviglie, %ebx			# FINE TEST
 
 		movl $0, conta_dw			# setto conta_dw a 0 
@@ -489,7 +489,7 @@ asm_main:
 		leal load_wm, %edx
 		leal total_watt, %ebx
 		andl %eax, %edx
-		cmp $1, (%edx)
+		cmp $1, %edx
 		subl lavatrice, %ebx				# FINE TEST
 
 		movl $0, conta_wm			# setto conta_wm a 0 
