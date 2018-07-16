@@ -347,7 +347,7 @@ asm_main:
 		# 3kW < F3 <= 4.5kW
 		# OL > 4.5kW
 
-		#controllo se la macch è acc, se è spenta scrivo 00 nella fascia
+		# controllo se la macch è acc, se è spenta scrivo 00 nella fascia
 		mov is_ON, %al
         cmp $0, %al
         je scrive_00
@@ -397,17 +397,45 @@ asm_main:
 	# incrementare current_OL
 	OL:
 		# todo : fare i tramacci
-		leal current_OL, %eax				# prendo l'indirizzo di memoria di is_0N e lo salvo in eax
+		leal current_OL, %eax				# prendo l'indirizzo di memoria di current_OL e lo salvo in eax
 		addl $1, (%eax)
 		movl (%eax), %edx
 		movb $79, 4(%edi)                   # scrivo "OL"
         movb $76, 5(%edi)
+
+		# 4 cicli di clock, il dispositivo commuta conta_dw a 0
+		movl current_OL, %eax
+		cmp $4,%eax
+		je conta_dw_a_0
+
+		# (5° ciclo in OL) il dispositivo commuta INT_WM a
+		movl current_OL, %eax
+		cmp $5,%eax
+		je conta_wm_a_0
+
+		# (6° ciclo in OL)il dispositivo commuta INT_GEN a 0 ed il sistema si spegne.
+		movl current_OL, %eax
+		cmp $6,%eax
+		je is_ON_a_0
+
 		jmp fine_controllo_fascia
 
 	scrive_00:
 	    movb $48, 4(%edi)
         movb $48, 5(%edi)
         jmp fine_controllo_fascia
+	
+	conta_dw_a_0:
+		movl $0, conta_dw			# setto conta_dw a 0 
+		jmp fine_controllo_fascia
+
+	conta_wm_a_0:
+		movl $0, conta_wm			# setto conta_wm a 0 
+		jmp fine_controllo_fascia
+	
+	is_ON_a_0:
+		movl $0, is_ON			# setto is_ON a 0 
+		jmp fine_controllo_fascia
 
 	fine_main:
 	    # gestione parametro output
