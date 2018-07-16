@@ -472,15 +472,26 @@ asm_main:
 	
 	conta_dw_a_0:
 		# se load_dw è a 1 e conta_dw a 1, sottraggo il valore dei watt di dw
-		# leal conta_dw, %eax
-		# leal load_dw, %edx
-		# andl %eax, %edx
-		# cmp $1, (%edx)
+		leal conta_dw, %eax					# TEST
+		leal load_dw, %edx
+		leal total_watt, %ebx
+		andl %eax, %edx
+		cmp $1, (%edx)
+		subl lavastoviglie, %ebx			# FINE TEST
 
 		movl $0, conta_dw			# setto conta_dw a 0 
 		jmp incrementa_OL
 
 	conta_wm_a_0:
+
+		# se load_dw è a 1 e conta_dw a 1, sottraggo il valore dei watt di dw
+		leal conta_wm, %eax						# TEST
+		leal load_wm, %edx
+		leal total_watt, %ebx
+		andl %eax, %edx
+		cmp $1, (%edx)
+		subl lavatrice, %ebx				# FINE TEST
+
 		movl $0, conta_wm			# setto conta_wm a 0 
 		jmp incrementa_OL
 	
