@@ -91,10 +91,8 @@ int main(int argc, char *argv[]) {
     ////////////////////////////// INIZIO ESECUZIONE ASM
    
     printf("\n\tINIZIO ASM\n");
-    //strcpy(bufferout_asm,asm_main(bufferin));
 
     asm_main(bufferin, bufferout_asm);
-    //printf("%c\n", asm_main(bufferin));
     printf("\tFINE ASM\n");
     
 
